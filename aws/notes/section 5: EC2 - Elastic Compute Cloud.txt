@@ -1,0 +1,160 @@
+EC2: one of the most popular services 
+- elastic compute cloud (IaaS)
+- fundamental 
+- instances are virtual servers in the cloud 
+
+Capabilities: 
+- rent VMs
+- store data on virtual drives (EBS)
+- distributing load across machines (ELB)
+- scaling services using an auto-scaling group (ASG)
+
+Config options: 
+- OS (linux, windows, or mac)
+- Compute power and cores (CPU)
+- How much random-access memory (RAM)
+- How much storage space 
+- Network card (speed of card and Public IP address)
+- Firewall rules
+- Bootstrap script 
+
+bootstrapping: launching commands when a machine starts (script runs once when the machine starts)
+- it is possible to bootstrap instances using EC2 User data script
+- tasks to automate: 
+  - install updates, install software, common files, etc. 
+
+Launching an instance: 
+- AMI (Amazon Machine Image)
+- Follow config steps to launch/start instance (start web server)
+- can launch as many instances as you want (1 to 100 to ...)
+
+- can start, stop (pause) or terminate (cancel and never return) instances
+* if you stop and restart an instance, the public ip address will change
+
+How is this different from traditional IT? 
+- used to need to buy servers to be able to have the compute power 
+- now have on demand compute power by spinning up, stopping instances (compute power) as needed 
+- will only pay for instances that are running
+
+Types of EC2 instances: https://aws.amazon.com/ec2/instance-types/
+1) General purpose: provide balance of compute, memory, and networking resources (eg. web servers and code repositories)
+- naming convention: eg. m5.2xlarge 
+  - instance class (m)
+  - generation - AWS will improve over time (5)
+  - size within the instance class (2xlarge): the larger the size, the more cpu and ram 
+
+2) Compute optimized: for compute-intensive tasks (eg. batch processing, high performance computing, machine learning, scientific modeling, dedicated gaming servers)
+
+3) Memory optimized: fast performance for workloads that proces slarge data sets in memory (RAM)
+  uses: 
+    - high performance relational/non-relational databases, 
+    - distributed web scale cache stores 
+    - business intelligence (BI)
+    - apps performing real-time processing of big unstructured data 
+
+4) Storage optimized instances: storage-instensive tasks 
+  uses 
+    - high frequency online transaction processing systems (OLTP)
+    - relational and NoSQL databases 
+    - cache for in-memory databases (eg. Redis)
+    - data warehousing applications 
+    - distributed file systems 
+
+to compare EC2 instances: https://instances.vantage.sh/
+
+
+Security Groups: fundamental in doing network security in AWS cloud 
+create security group around EC2 instances (firewall around instances)
+- control how traffic is allowed into or out of our instances 
+- only contain allow rules 
+- can reference by IP or by security group (ie. firewall filter can allow specified IP addresses or EC2 instances with certain attached security 
+groups to access the instance it guards)
+
+What they regulate: 
+- access to ports 
+- authorized IP ranges
+- inbound (from other to the instance) and outbound network (from the instance to other)
+  - source: 0.0.0.0/0 (any IP address can access (IPv4 format)
+  - ::/0 (anywhere on IPv6 formats)
+
+security groups can be attached to multiple instances, locked down to a region, live outside the EC2 (if traffic is blocked, instance won't know about it),
+  it's good practice to maintain one separate security group for SSH access, if there is a time out it is likely a security group issue, if get 
+  a 'connection refused' error then it is an application error 
+
+Ports to know: 
+  SSH (secure shell) - port 22: allows you to log into an EC2 instance on linux 
+  FTP (file transfer protocol) - port 21: upload files into a file share 
+  SFTP (secure file transfer protocol) - port 22: upload files using SSH 
+  HTTP - port 80: access unsecured websites 
+  HTTPS - port 443: access secured websites 
+  RDP (remote desktop protocl) - port 3389: log into a windows instance 
+  Custom TCP: can customize port to whatever you want 
+
+How to use SSH (OS dependent): Linux/Mac 
+- SSH allows you to control a remote machine using the command line 
+- need key file in order to access machine (can only download this key file once!)
+  - CL command to access: ssh -i EC2Tutorial.pem ec2-user@3.143.7.138   # the -i references the key file 
+  - initially will have permissions for the key that are too open and permission will be denied (Warning: Unprotected private key file!)
+    to fix from CL: chmod 0400 EC2Tutorial.pem 
+    - then re-run command 
+
+- once access the machine, can perform commands from CL (eg. ping google.com # connects to google using linux command)
+
+EC2 instance connect is a way to connect to instance that works for all OS (linux, max, windows - all versions)
+- uses temporary SSH key behind the scenes 
+- still relies on SSH (will need permissions with SSH in security groups) 
+- connect through console (via connect tab): ec2-user 
+
+
+EC2 instance roles: 
+  NEVER enter AWS access key, secret access key into EC2 instance
+  - USE IAM ROLES
+  Attach IAM roles (defined in IAM) to EC2 instances within EC2 page (actions -> security -> modify IAM roles)
+    - this allows you to use AWS commands (eg. aws list-users) in the SSH CL to access data based on the permissions of the attached role 
+
+EC2 instances purchasing options: 
+  1) on-demand instances: short workload, predictable pricing 
+    - pay for what you use 
+    - high cost but no upfront payment and no long-term commitment 
+    - recommended for short-term and un-interrupted workloads
+  2) reserved (1 or 3 years)
+    - reserved instances for long workloads (eg. databases)
+      - 75% discount 
+      - reservation period (longer the period, the bigger the discount)
+      - options: purchase upfront, no upfront, partial upfront 
+      - need to reserve an instance type 
+      - recommended if application is in steady state usage (eg. database)
+
+    - convertible reserved instances for long workloads with flexible instances 
+      - can change the EC2 instance type over time 
+      - less of a discount (54%)
+      
+    - scheduled reserved instances (eg. spin up every thursday between 3 and 6 pm)
+      - launch within time window you reserve 
+      - need to commit to over 1 year 
+
+  3) spot instances: short workloads, cheap, can lose instances (less reliable)
+    - provide highest discount (up to 90%)
+    - can lose at any time 
+    - spot price changes over time; can lose instances at any time if your max price falls below spot price
+    - useful for workloads that are resilient to failure (eg. batch jobs, data analysis, image processing, any distributed workloads, workload with flexible start and end time)
+    - not great for critical job or database 
+
+  4) dedicated hosts: book an entire physical server, control instance placement, fully dedicated to your use 
+    - can help with compliance requirements 
+    - reduce costs by allowing you to use existing server-bound software licenses 
+    - allocated for 3-year reservation 
+    - more expensive 
+    - useful for complicated software licensing model or compliance needs 
+    - more involved than dedicated instances 
+
+  5) dedicated instances: instances running on hardware that's dedicated to you 
+    - may share hardware with other instances in same account 
+    - no control over instance placement 
+    - soft version of dedicated host 
+
+
+Summary: 
+  EC2 Instance: AMI (define OS) + Instance Size (CPU + RAM) + Storage + Security Group (firewall) + EC2 User data (bootstrap script)
+  EC2 user data: script that is launched at the first start of the instance
+  SSH: way to start terminal into EC2 instances to start issuing commands 

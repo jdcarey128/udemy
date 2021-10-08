@@ -1,0 +1,91 @@
+AWS Cloud Practioner exam: CLF-C01
+
+Section 3: What is Cloud Computing? 
+
+What is in a server? 
+- CPU: Computation
+- RAM: Memory
+- CPU + RAM = Brain of Computer
+- Storage: Data 
+  - Stored in a more structured way = database
+- Network: Routers, switch, DNS server 
+
+IT Terminology:
+- network: cables, routesr and servers connetec with each other 
+- router: a networking device that forwards data packets between computers within networks. 
+- switch: send packet of data to the correct client on your network
+
+Cloud computing: on demand delivery of compute power, database storage, applications, and other IT resources
+- pay as you go pricing (pay for only what you use)
+- provision exactly the right size and type of computing resources you need
+- access as many resources as you need, instantly 
+- easily accessible interface
+
+Private cloud: private data center not exposed to the public
+- eg. Rackspace
+
+Public cloud: owned and operated by third party service provider
+- eg. Azure, Google Cloud, AWS
+
+Hybrid cloud: mix of private and public
+- control of sensitive assets that is provided by private cloud 
+- accessibility of public cloud 
+
+Five characteristics of cloud computing: 
+1) on demand self-service 
+2) broad network access 
+3) multi-tenancy and resource pooling 
+- customers can share same infrastructure and applications 
+4) rapid elsaticity and scalability 
+- quickly and easily scale based on demand 
+5) measured service 
+- usage is measured and you pay for what you use 
+
+6 Advantages: 
+1) Trade capital expense for operational expense 
+2) benefit from massive economies of scale 
+3) stop guessing capacity (auto scaling)
+4) increase speed and agility
+5) stop spending money running and maintaining data centers 
+6) go global in minutes 
+
+
+Types of cloud computing: 
+1) Infrastructure as a Service (IaaS)
+- providing networking, computers, data storage 
+- migrate from traditional on site IT to cloud 
+- eg. EC2
+2) Platform as a Service (PaaS)
+- Remove need for organization to manage the underlying infrastructure 
+- focus on the deployment and management of your applications 
+3) Software as a Service (Saas)
+- Completed product that is going to be run and managed by service provider 
+
+Comparison between service responsibilities: 
+Traditional on-premise: applications, data, runtime, middleware, O/S, virtualization, servers, storage, networking
+IaaS: applications, runtime, middleware, O/S 
+- eg. EC2 (AWS)
+PaaS: applications, data 
+- eg. Elastic Beanstalk, Heroku 
+Saas: everything is managed by AWS 
+eg. Rekognition, Gmail, Dropbox 
+
+AWS regions: 
+- all over the world 
+- contains code 
+- cluster of data centers 
+- most services are linked/scoped to region 
+- consist of isolated, physically distant availability zones 
+
+How do you choose an AWS region? 
+- compliance: data never leaves a region without your explicit permission 
+- proximity: depending on where most users are located, will likely choose nearby region (reduce latency, aka lag in application)
+- available services: regions may not have every service available
+- pricing: pricing varies from region to region 
+
+Availability zones: 
+- each region has several Availability zones (from 2 to 6)
+- each availability zone is one or more discrete data center with redundant power, networking, and connectivity (protects against loss)
+
+
+The shared responsibility model: defines the distribution of responsibilites for security in the AWS cloud 

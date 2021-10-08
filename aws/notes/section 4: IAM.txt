@@ -1,0 +1,90 @@
+AWS Service IAM
+
+IAM: Identity and Access Management (global service)
+
+Root account: only use to set up account (or what is absolutely necessary - otherwise has too much power)
+- eg. set up user accounts 
+
+Create Users: 
+- people within organization 
+- Can group users, but cannot group groups 
+- Can have users without group 
+- Users can be a part of multiple groups
+
+For groups, can assign permissions (through JSON document)
+
+Least priviledge principle: give the least amount of permissions that a user needs 
+
+Tags: available everywhere within AWS, allows you to attach metadata to data 
+
+Policies: user permissions 
+group policies: apply to all users within the group 
+in-line policy: applies to a single user 
+
+Policy structure: (JSON)
+{
+  "Version": "",
+  "Id": #identifier for policy,
+  "Statement": [ # one or more
+    {
+      "Sid": # statement identifier,
+      "Effect": # allows or denies access,
+      "Principal": # account user role to which policy is applied 
+      "Action": [ #list of actions the policy allows, denies
+      ],
+      "Resource": [
+        # list of resources the policy applies to 
+      ]
+    }
+  ]
+}
+
+- you can define your own policy by writing JSON or using the UI 
+- can define a password policy (length and character types, password expiration, re-use)
+
+MFA: multi-factor authentication
+-increases security 
+- device options for authentication: 
+  - virtual MFA (Google authenticator for phone only, Authy multi-device)
+  - unversal 2nd factor (U2F) security key: use physical device (something like a USB)
+  - Hardware key (eg. Hardware key fob for AWS GovCloud)
+
+To access AWS: 
+1) AWS Managmenet console 
+2) AWS command line interface: protected by access keys 
+3) AWS Software Developer Kit (SDK): for code, protected by access keys 
+- access keys are generated through the AWS console 
+- DO NOT generate access keys from the root account 
+
+all AWS CLI commands begin with `aws`
+- open-source on gitHub
+
+SDK is language specific and is something that is embedded within code 
+
+Cloudshell is an alternative to the terminal
+- it is basically a terminal in the cloud of AWS 
+- you are able to upload and download files to cloudshell 
+- only available in some regions 
+
+IAM Roles: 
+- just like assigning permissions to people, however roles are assigning permissions to AWS services 
+eg. EC2 instance (virtual server)
+  - this service may want to perform some actions on AWS, and will need permissions in order to do so 
+  - common roles: Instance roles, lambda function roles, roles for CloudFormation 
+
+Security Tools: 
+- IAM credentials report: (account-level)
+  - report lists all users and their status of various credentials
+- IAM access advisor (user-level)
+  - shows service permissions granted and when services were last accessed 
+
+Best practices: 
+- do not use root account except for AWS account setup 
+- one physical user = one AWS user 
+- assign users to groups and assign permissions to groups 
+- create a strong password policy 
+- use MFA 
+- create and use Roles for giving permissions to AWS services 
+- Use acces keys for programmatic acces (CLI/SDK)
+- audit permissions of your account with the IAM credentials report 
+- NEVER share access keys 

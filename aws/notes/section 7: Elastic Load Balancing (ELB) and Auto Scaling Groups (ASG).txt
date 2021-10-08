@@ -1,0 +1,106 @@
+With ELB and ASG, really start to see the power of the cloud in scaling applications seamlessly 
+
+Scalability: can handle greater loads by addapting 
+  - vertical scalability: increasing the size of the instance (increasing the load capacity by increasing the amount of work one can handle)
+    eg. t2.micro move to t2.large 
+    - very common for non distributed systems (eg. database)
+    - there is a hardware limit to how much you can scale 
+    - scale up/down (t2.nano: 0.5G of RAM and 1 vCPU -> u-12tb1.metal: 12.3TB of RAM and 448 vCPUs = scale up)
+  - horizontal scalability: (elasticity) increase the number of instances/systems for your application (increase load by increasing the total number of systems)
+    eg. scale out/in: using auto scaling group and/or load balancer 
+    - implies distributed systems
+    - very common for web applications 
+  
+
+High Availability: running instances for the same application/system in at least 2 AZs 
+  - if one app/system goes down, can then move demand to other app in different AZ 
+  - goal is to survive a data center loss 
+  - use ASG mutli-AZ and/or Load Balancer mutli-AZ
+
+scalability: ability for system to accomodate a larger load by making the hardware stronger (scale up) or by adding nodes (scale out)
+elasticity: once a system is scalable, elasticity means that there will be some 'auto-scaling' so that the system can scale based on the load. 
+- cloud friendly, pay per use 
+agility: new IT resources are only a click away
+- reduces time to make resources available to resources 
+
+ELB (elastic load balancing)
+- Load Balancer: server that will forward internet traffic to multiple servers (EC2 instances) downstream 
+- allows to scale easier 
+- spread load across multiple downstream instances 
+- expose a single point of access (DNS) to your application 
+  - otherwise, if you have multiple instances of the same application, users will need different IP addresses to access the same site
+- seamlessly handle failures of downstream instances 
+  - do health checks on instances, if one fails then can have LB not send requests to it 
+- can use LB across multiple AZs to make application highly available 
+
+- AWS provides ELB servers for you, makes sure it is working, takes care of upgrades/maintenance, allows for a few configurations 
+  - you are able to set up free load balancer on EC2 instances, but this will require a lot more effort on your end to maintain 
+
+Load Balancer Options: 
+1) Application Load Balancer (HTTP/HTTPS only) - layer 7
+2) Network Load Balancer (ultra-high performance, allos for TCP) - layer 4
+  - lower-level protocols
+  - great for gaming situations
+3) Classic Load Balancer (slowly retiring) - layer 4 and 7
+4) Gateway Load Balancer 
+
+
+Setting up a load balancer: 
+- Set up 2+ instances 
+- In left side panel, select Load Balancers 
+- Create a load balancer, run through steps (selecting AZs, assigning security group, etc)
+- Register instances to load balancer 
+- Can view target group (with assigned instances) in target groups tab 
+  - from here you can view all of the attached instances, their health/status 
+
+
+Auto Scaling Group: automatically create servers
+- needed because load on your websites and application can change over time 
+- with cloud, can create and get rid of servers very quickly 
+- with ASG, can scale out (add EC2 instances to match increase load) and scale in (remove EC2 instances to match a decreased load)
+  - ensure we have min and max number of machines running 
+  - automatically register/deregister new instances to a load balancer 
+  - replace unhealthy instances 
+- huge cost savings (only run at an optimal capacity)
+
+mimimum size: absolute minimum number of EC2 instances running 
+actual size/desired capacity: number of EC2 instances running consistently 
+maximum size: room for EC2 instances to scale out as needed 
+
+Creating an ASG: 
+- Go to Auto Scaling Group tab in EC2 sidebar 
+- Will need to create a Launch template (pretty much the same process as creating an EC2 instance)
+- For subnets, select multiple AZs in order to make the ASG highly available 
+- Attach to Load Balancer 
+- For health checks, if select ELB, then the ASG will know when servers are unhealthy and replace them as necessary 
+- Scaling policy allows you to define how new instances are triggered (eg. if the number of requests per second per instance reaches x, then add a new instance)
+
+ASG strategies: 
+1) manual scaling: update size of ASG manually 
+2) dynamic scaling: respond to changing demand automatically 
+- simple/step scaling: when a CloudWatch alarm is triggered, 
+  eg. CPU > 70% for 10 minutes then add 2 units, OR 
+      CPU < 30% for 10 minutes, then remove 1 
+- target tracking scaling
+  eg. want the average ASG CPU to stay at around 40% (ASG will scale automatically to meet that)
+- scheduled scaling 
+  eg. anticipate scaling based on known behaviors (event-based behaviors)
+3) Predictive Scaling: uses machine learning to predict future traffic ahead of time (based on past patterns)
+  - automatically provision the right number of EC2 instances in advance 
+  - useful when your load has predictabble time-based patterns 
+
+Summary: 
+- high availability: have apps across multiple AZs 
+- vertical scaling: increasing the size of an instance
+- horizontal scaling: increasing the number of instances 
+- elasticity: ability to scale up and down based on demand 
+- agility: concept of cloud that allows you to work faster b/c you can create/delete resources easily 
+- ELB: 
+  - distribute traffic across instances 
+  - can be set across multiple AZs (highly available)
+  - supports health checks 
+  - types: Application LB (HTTP), Network LB (TCP), Classic LB (not on exam)
+- ASG: 
+  - Implement elasticity of app, across multiple AZ 
+  - scale EC2 instances based on the dmand on your system, replace unhealthy instances 
+  - integrated with ELB 
